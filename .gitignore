@@ -1,3 +1,6 @@
 __pycache__
 venv/
 .env
+docker-compose-dev.yml
+docker-compose-prod.yml
+Dockerfile
