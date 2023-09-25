@@ -4,7 +4,7 @@ from . import models
 from .database import engine
 from .routers import posts, users, auth, votes
 
-models.Base.metadata.create_all(bind = engine)
+models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="Fast API",
@@ -29,10 +29,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # initial Path
-@app.get("/", name="root", tags=['root'])
+@app.get("/", name="root", tags=["root"])
 def home():
-    return{"message": "Welcome to FASTAPI"}
+    return {"message": "Welcome to FASTAPI"}
+
 
 app.include_router(auth.router)
 app.include_router(users.router)

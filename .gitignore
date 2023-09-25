@@ -4,3 +4,6 @@ venv/
 docker-compose-dev.yml
 docker-compose-prod.yml
 Dockerfile
+tests/__pycache__
+.pytest_cache
+.VScode

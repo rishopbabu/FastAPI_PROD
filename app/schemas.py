@@ -71,4 +71,4 @@ class PostVoteResponse(BaseModel):
 
 class Vote(BaseModel):
     post_id: int # want to give the post id
-    dir: conint(le=1) # only lessthan or equal to one
+    dir: conint(le=1) # only lessthan or equal to one # type: ignore
