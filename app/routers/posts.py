@@ -34,7 +34,7 @@ def get_posts( # type: ignore
         .all()
     )
 
-    return posts
+    return {"Posts": posts}
 
 
 # Get an individual post based on id
