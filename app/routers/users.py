@@ -22,6 +22,26 @@ router = APIRouter(
     response_model=schemas.CreateUserResponse,
 )
 def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
+    # check if the registered user already exist or not
+    existing_user_email = db.query(models.Users).filter(models.Users.email == user.email).first()
+    existing_user_phone = db.query(models.Users).filter(models.Users.phone == user.phone).first()
+
+    if existing_user_email and existing_user_phone:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f'User with email: {user.email} and phone number: {user.phone} already exists',
+        )
+    elif existing_user_email:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f'User with email: {user.email} already exists',
+        )
+    elif existing_user_phone:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail=f'User with phone number: {user.phone} already exists'
+        )
+
     # hash the user password - user.password
     hashed_pwd = utils.hash_password(
         user.password

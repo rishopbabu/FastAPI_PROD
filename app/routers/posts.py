@@ -33,6 +33,7 @@ def get_posts( # type: ignore
         .offset(skip)
         .all()
     )
+    print("posts", posts)
 
     return {"Posts": posts}
 
