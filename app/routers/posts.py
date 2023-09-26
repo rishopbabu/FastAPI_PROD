@@ -35,7 +35,7 @@ def get_posts( # type: ignore
     )
     print("posts", posts)
 
-    return {"Posts": posts}
+    return posts
 
 
 # Get an individual post based on id
