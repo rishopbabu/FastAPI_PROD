@@ -1,10 +1,11 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status, HTTPException, Header
 from fastapi.security.oauth2 import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from .. import database, models, utils, oauth2
 
 
-router = APIRouter(tags=["Authentication"])
+router = APIRouter(prefix="/auth", 
+                   tags=["Authentication"])
 
 
 @router.post("/login")
@@ -51,10 +52,12 @@ def login(
 
 
 @router.post("/refresh-token")
-def refresh_token(refresh_token: str, db: Session = Depends(database.get_db)):
+def refresh_token(token: str = Header(...), 
+                  db: Session = Depends(database.get_db),
+                  current_user: int = Depends(oauth2.get_current_user)):
     
-    payload =  oauth2.verify_refresh_token(refresh_token)
-    
+    payload =  oauth2.verify_refresh_token(token)
+    print("payload",payload)
     if payload is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

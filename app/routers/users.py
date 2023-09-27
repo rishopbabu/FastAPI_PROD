@@ -14,28 +14,6 @@ router = APIRouter(
     tags=["Users"],
 )
 
-
-# Create a new users account or Rejister a new user
-# @router.post(
-#     "/register",
-#     status_code=status.HTTP_201_CREATED,
-#     response_model=schemas.CreateUserResponse,
-# )
-# def create_user(user: schemas.CreateUser, db: Session = Depends(get_db)):
-#     # hash the user password - user.password
-#     hashed_pwd = utils.hash_password(
-#         user.password
-#     )  # getting the password from user input and store in a variable
-#     user.password = hashed_pwd  # set the user.password a hashed password
-
-#     # create a new user
-#     new_user = models.Users(**user.model_dump())
-#     db.add(new_user)
-#     db.commit()
-#     db.refresh(new_user)
-
-#     return new_user
-
 @router.post(
     "/register",
     status_code=status.HTTP_201_CREATED,
