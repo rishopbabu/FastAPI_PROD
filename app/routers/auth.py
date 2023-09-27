@@ -40,9 +40,38 @@ def login(
     access_token = oauth2.create_access_token(
         data={"user_id": user.id}
     )  # create a token
+    refresh_token = oauth2.create_refresh_token(data={"user_id": user.id})
 
     return {
         "access_token": access_token,
+        "refresh_token": refresh_token,
         "token_type": "bearer",
         "user_details": user_details,
     }  # return a token
+
+
+@router.post("/refresh-token")
+def refresh_token(refresh_token: str, db: Session = Depends(database.get_db)):
+    
+    payload =  oauth2.verify_refresh_token(refresh_token)
+    
+    if payload is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid refresh token"
+        )
+    
+    user_id = payload.get("user_id")
+    
+    if user_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid refresh token because of user_id mismatch"
+        )
+    
+    access_token = oauth2.create_access_token(data={"user_id": user_id})
+    
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }

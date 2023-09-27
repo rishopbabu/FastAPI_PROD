@@ -13,6 +13,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 SECRET_KEY = settings.secret_key
 ALGORITHM = settings.algorithm
 ACCESS_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
+REFRESH_TOKEN_EXPIRE_MINUTES = settings.access_token_expire_minutes
 
 
 def create_access_token(data: dict):
@@ -25,6 +26,16 @@ def create_access_token(data: dict):
 
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
+    return encoded_jwt
+
+
+def create_refresh_token(data: dict):
+    expire = datetime.utcnow() + timedelta(minutes=REFRESH_TOKEN_EXPIRE_MINUTES)
+    
+    data.update({"exp": expire})
+    
+    encoded_jwt = jwt.encode(data, SECRET_KEY, algorithm=ALGORITHM)
+    
     return encoded_jwt
 
 
@@ -43,6 +54,15 @@ def verify_access_token(token: str, credentials_exceptions):
         raise credentials_exceptions
 
     return token_data
+
+def verify_refresh_token(token: str):
+    
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        return payload
+    
+    except JWTError:
+        return None
 
 
 def get_current_user(
